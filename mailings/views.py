@@ -13,11 +13,13 @@ from mailings.models import Message
 
 
 class HomeView(TemplateView):
+    """ Главная страница """
     template_name = 'index.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         return context
+
 
 class MailingListView(ListView):
     """ Список сообщений """
@@ -31,13 +33,6 @@ class MailingDetailView(DetailView):
 
     model = Message
 
-# class MailingCreateView(CreateView):
-#     """ Создание сообщения """
-#
-#     model = Message
-#     form_class = MessageForms
-#     template_name = 'message_service/message_form.html'
-#     success_url = '/'
 
 class MailingUpdateView(UpdateView):
     """ Редактирование сообщения """

@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {% if client.id %}
+        Редактирование клиента
+    {% else %}
+        Создание клиента
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="display-4 text-center">{% if client.id %}Редактирование клиента{% else %}Создание нового клиента{% endif %}</h1>
+    <p class="lead text-center">Заполните форму ниже.</p>
+
+    <div class="row justify-content-md-center mt-4">
+        <div class="col-md-10 col-sm-12">
+            <div class="card shadow">
+                <div class="card-body">
+                    <form method="post" novalidate>
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="id_full_name" class="form-label">ФИО</label>
+                            <input type="text" class="form-control" id="id_full_name" name="full_name" value="{% if client.full_name %}{{ client.full_name }}{% endif %}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="id_email" class="form-label">E-mail</label>
+                            <input type="email" class="form-control" id="id_email" name="email" value="{% if client.email %}{{ client.email }}{% endif %}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="id_comment" class="form-label">Комментарий</label>
+                            <textarea class="form-control" id="id_comment" name="comment" rows="5">{% if client.comment %}{{ client.comment }}{% endif %}</textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            {% if client.id %}
+                                Сохранить изменения
+                            {% else %}
+                                Создать клиента
+                            {% endif %}
+                        </button>
+                        <a href="{% url 'clients:clients_list' %}" class="btn btn-secondary ml-2">Отмена</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

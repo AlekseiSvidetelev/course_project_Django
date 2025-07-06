@@ -24,4 +24,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('mailings.urls', namespace='mailings')),
     path('users/', include('users.urls', namespace='users')),
+    path('message/', include('mailings_message.urls', namespace='create_message')),
+    path('clients/', include('clients.urls', namespace='clients')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

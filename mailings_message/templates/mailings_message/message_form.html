@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {% if message.id %}
+        Редактирование сообщения
+    {% else %}
+        Создание сообщения
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="display-4 text-center">{% if message.id %}Редактирование сообщения{% else %}Создание нового сообщения{% endif %}</h1>
+    <p class="lead text-center">Заполните форму ниже.</p>
+
+    <div class="row justify-content-md-center mt-4">
+        <div class="col-md-10 col-sm-12">
+            <div class="card shadow">
+                <div class="card-body">
+                    <form method="post" novalidate>
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="id_subject" class="form-label">Тема сообщения</label>
+                            <input type="text" class="form-control" id="id_subject" name="subject" value="{% if message.subject %}{{ message.subject }}{% endif %}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="id_body" class="form-label">Текст сообщения</label>
+                            <textarea class="form-control" id="id_body" name="body" rows="5" required>{% if message.body %}{{ message.body }}{% endif %}</textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            {% if message.id %}
+                                Сохранить изменения
+                            {% else %}
+                                Создать сообщение
+                            {% endif %}
+                        </button>
+                        <a href="{% url 'mailings_message:list_messages' %}" class="btn btn-secondary ml-2">Отмена</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
