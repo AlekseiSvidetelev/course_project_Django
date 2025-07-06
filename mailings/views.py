@@ -8,8 +8,8 @@ from django.views.generic import (
     DeleteView, TemplateView,
 )
 
-from message_service.forms import MessageForms
-from message_service.models import Message
+# from mailings.forms import MessageForms
+from mailings.models import Message
 
 
 class HomeView(TemplateView):
@@ -31,13 +31,13 @@ class MailingDetailView(DetailView):
 
     model = Message
 
-class MailingCreateView(CreateView):
-    """ Создание сообщения """
-
-    model = Message
-    form_class = MessageForms
-    template_name = 'message_service/message_form.html'
-    success_url = '/'
+# class MailingCreateView(CreateView):
+#     """ Создание сообщения """
+#
+#     model = Message
+#     form_class = MessageForms
+#     template_name = 'message_service/message_form.html'
+#     success_url = '/'
 
 class MailingUpdateView(UpdateView):
     """ Редактирование сообщения """

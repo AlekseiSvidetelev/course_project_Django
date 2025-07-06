@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from message_service.models import Client, Message, MailingList, AttemptSend
+from mailings.models import Client, Message, MailingList, AttemptSend
 
 
 @admin.register(Client)
