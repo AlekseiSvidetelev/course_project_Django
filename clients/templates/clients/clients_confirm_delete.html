@@ -13,7 +13,8 @@
                 <div class="card-body">
                     <form method="post">
                         {% csrf_token %}
-                        <p class="mb-4">Вы собираетесь удалить клиента: <strong>"{{ object }}"</strong>. Это действие необратимо.</p>
+                        <p class="mb-4">Вы собираетесь удалить клиента: <strong>"{{ object }}"</strong>. Это действие
+                            необратимо.</p>
                         <button type="submit" class="btn btn-danger mr-2">Удалить</button>
                         <a href="{% url 'clients:clients_list' %}" class="btn btn-secondary">Отмена</a>
                     </form>

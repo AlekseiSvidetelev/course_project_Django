@@ -6,56 +6,61 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    <style>
+        .list-group-item.active {
+            background-color: white !important;
+            color: blue !important;
+            font-weight: bold;
+        }
+    </style>
     <title>{% block title %}{% endblock %}</title>
 </head>
 <body>
-
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
-    <div class="container">
-        <a class="navbar-brand" href="{% url 'mailings:home' %}">Моя рассылка</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
-                aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-            <ul class="navbar-nav ms-auto">
-                {% if user.is_authenticated %}
-                <li class="nav-item"><a class="nav-link active" href="#">Выход</a></li>
-                {% else %}
-                <li class="nav-item"><a class="nav-link active" href="#">Войти</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">Регистрация</a></li>
-                {% endif %}
-            </ul>
-        </div>
-    </div>
-</nav>
-
-<div class="container-fluid mt-4">
-    <div class="row">
-        <div class="col-md-2">
-            <div class="list-group">
-                <a href="{% url 'mailings_message:list_messages' %}" class="list-group-item list-group-item-action">Сообщения</a>
-                <a href="{% url 'clients:clients_list' %}}" class="list-group-item list-group-item-action">Получатели</a>
-                <a href="#" class="list-group-item list-group-item-action">Рассылки</a>
-                <a href="#" class="list-group-item list-group-item-action">Все попытки</a>
+<div class="d-flex flex-column min-vh-100">
+    <header class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'mailings:home' %}">Моя рассылка</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
+                    aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                <ul class="navbar-nav ms-auto">
+                    {% if user.is_authenticated %}
+                    <li class="nav-item"><a class="nav-link active" href="#">Выход</a></li>
+                    {% else %}
+                    <li class="nav-item"><a class="nav-link active" href="#">Войти</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Регистрация</a></li>
+                    {% endif %}
+                </ul>
             </div>
         </div>
-        <div class="col-md-10">
+    </header>
+    <main class="d-flex flex-row flex-fill overflow-hidden">
+        <aside class="col-md-2 p-0 position-fixed top-0 bottom-0 h-100 bg-primary text-white">
+            <div class="list-group w-100 px-2" style="margin-top: 5rem;">
+                <a href="{% url 'mailings_message:list_messages' %}"
+                   class="list-group-item list-group-item-action rounded-pill border-0 m-1 {% if request.resolver_match.url_name == 'list_messages' %}active{% endif %}">Сообщения</a>
+                <a href="{% url 'clients:clients_list' %}"
+                   class="list-group-item list-group-item-action rounded-pill border-0 m-1 {% if request.resolver_match.url_name == 'clients_list' %}active{% endif %}">Получатели</a>
+                <a href="#"
+                   class="list-group-item list-group-item-action rounded-pill border-0 m-1 {% if request.resolver_match.url_name == 'some_url_name_for_mailings' %}active{% endif %}">Рассылки</a>
+                <a href="#"
+                   class="list-group-item list-group-item-action rounded-pill border-0 m-1 {% if request.resolver_match.url_name == 'some_url_name_for_attempts' %}active{% endif %}">Все
+                    попытки</a>
+            </div>
+        </aside>
+        <section class="col-md-10 offset-md-2 pt-5 pb-5 pl-3 pr-3">
             {% block content %}{% endblock %}
+        </section>
+    </main>
+    <footer class="bg-light py-3 mt-4 fixed-bottom">
+        <div class="container text-center">
+            <small>© {{ now|date:'Y' }} Моя рассылка </small>
         </div>
-    </div>
+    </footer>
 </div>
-
-<!-- Нижний колонтитул -->
-<footer class="bg-light py-3 mt-4 fixed-bottom">
-    <div class="container text-center">
-        <small>© {{ now|date:'Y' }} Моя рассылка | Все права защищены</small>
-    </div>
-</footer>
-
-<!-- Bootstrap JS и Popper.js -->
 <script src="{% static 'js/popper.min.js' %}"></script>
 <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
-
 </body>
 </html>

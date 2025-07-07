@@ -3,8 +3,8 @@
 {% block title %}Список клиентов{% endblock %}
 
 {% block content %}
-<div class="container mt-4">
-    <h1 class="display-4 text-center">Список клиентов</h1>
+<div class="container ">
+    <h1 class="display-6 text-center">Список клиентов</h1>
     <p class="lead text-center">Просмотрите список зарегистрированных клиентов.</p>
 
     <div class="row justify-content-md-center mt-4">
@@ -16,33 +16,33 @@
                 </div>
                 <div class="card-body">
                     {% if clients %}
-                        <table class="table table-hover">
-                            <thead>
-                                <tr>
-                                    <th scope="col" style="width: 5%;">№</th>
-                                    <th scope="col" style="width: 20%;">ФИО</th>
-                                    <th scope="col" style="width: 20%;">E-mail</th>
-                                    <th scope="col" style="width: 35%;">Комментарий</th>
-                                    <th scope="col" style="width: 20%;">Действия</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for client in clients %}
-                                    <tr>
-                                        <td>{{ forloop.counter }}</td>
-                                        <td>{{ client.full_name }}</td>
-                                        <td>{{ client.email }}</td>
-                                        <td>{{ client.comment|truncatewords:10 }}</td>
-                                        <td>
-                                            <a href="{% url 'clients:clients_detail' client.id %}" class="btn btn-info btn-sm">Подробнее</a>
-                                            <a href="{% url 'clients:clients_delete' client.id %}" class="btn btn-danger btn-sm">Удалить</a>
-                                        </td>
-                                    </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th scope="col" style="width: 5%;">№</th>
+                            <th scope="col" style="width: 20%;">ФИО</th>
+                            <th scope="col" style="width: 20%;">E-mail</th>
+                            <th scope="col" style="width: 35%;">Комментарий</th>
+                            <th scope="col" style="width: 20%;">Действия</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for client in clients %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ client.full_name }}</td>
+                            <td>{{ client.email }}</td>
+                            <td>{{ client.comment|truncatewords:10 }}</td>
+                            <td>
+                                <a href="{% url 'clients:clients_detail' client.id %}" class="btn btn-info btn-sm">Подробнее</a>
+                                <a href="{% url 'clients:clients_delete' client.id %}" class="btn btn-danger btn-sm">Удалить</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
                     {% else %}
-                        <p class="alert alert-info">Нет зарегистрированных клиентов.</p>
+                    <p class="alert alert-info">Нет зарегистрированных клиентов.</p>
                     {% endif %}
                 </div>
             </div>

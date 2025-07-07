@@ -25,7 +25,8 @@
                         <dd class="col-sm-9">{{ object.comment|linebreaksbr }}</dd>
                     </dl>
 
-                    <a href="{% url 'clients:clients_list' %}" class="btn btn-secondary btn-sm">Назад к списку клиентов</a>
+                    <a href="{% url 'clients:clients_list' %}" class="btn btn-secondary btn-sm">Назад к списку
+                        клиентов</a>
                     <a href="{% url 'clients:clients_update' object.id %}" class="btn btn-info btn-sm">Редактировать</a>
                     <a href="{% url 'clients:clients_delete' object.id %}" class="btn btn-danger btn-sm">Удалить</a>
                 </div>
