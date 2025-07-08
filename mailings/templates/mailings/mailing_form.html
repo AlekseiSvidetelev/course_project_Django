@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>{% if object %}Редактирование рассылки{% else %}Создание рассылки{% endif %}</h2>
+
+    <form method="post">
+        {% csrf_token %}
+
+        <div class="mb-3">
+            {{ form.start_time.label_tag }}
+            {{ form.start_time }}
+        </div>
+
+        <div class="mb-3">
+            {{ form.end_time.label_tag }}
+            {{ form.end_time }}
+        </div>
+
+        <div class="mb-3">
+            {{ form.status.label_tag }}
+            {{ form.status }}
+        </div>
+
+        <div class="mb-3">
+            {{ form.message.label_tag }}
+            {{ form.message }}
+        </div>
+
+        <div class="mb-3">
+            {{ form.clients.label_tag }}
+            {{ form.clients }}
+        </div>
+        <button type="submit" class="btn btn-primary">Сохранить</button>
+        {% if object %}
+        <a href="{% url 'mailings:mailing_detail' object.id %}" class="btn btn-secondary">Отмена</a>
+        {% else %}
+        <a href="{% url 'mailings:mailings_list' %}" class="btn btn-secondary">Отмена</a>
+        {% endif %}
+    </form>
+</div>
+{% endblock %}

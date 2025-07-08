@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %}Подтверждение удаления рассылки{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="display-4 text-center">Подтверждение удаления рассылки</h1>
+    <p class="lead text-center">Вы действительно хотите удалить?</p>
+
+    <div class="row justify-content-md-center mt-4">
+        <div class="col-md-6 col-sm-12">
+            <div class="card shadow">
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        <p class="mb-4">Вы собираетесь удалить рассылку: <strong>"{{ object }}"</strong>. Это действие необратимо.</p>
+                        <button type="submit" class="btn btn-danger mr-2">Удалить</button>
+                        <a href="{% url 'mailings:mailing_detail' object.pk %}" class="btn btn-secondary">Отмена</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -4,7 +4,7 @@ from clients.models import Client
 from mailings_message.models import Message
 
 
-class MailingList(models.Model):
+class Mailings(models.Model):
     """ Модель рассылки """
 
     STATUS_CHOICES = [

@@ -1,7 +1,9 @@
 from django import forms
-from .models import Message
 
-class MessageForms(forms.ModelForm):
+from mailings.forms import StyleFormMixin
+from mailings_message.models import Message
+
+class MessageForms(StyleFormMixin, forms.ModelForm):
     """ Класс формы для отправки сообщения """
 
     class Meta:
