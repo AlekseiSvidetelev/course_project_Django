@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy, reverse
 
 from django.views.generic import (
@@ -12,7 +12,9 @@ from django.views.generic import (
 from clients.models import Client
 from mailings.forms import MailingsForms
 from mailings.models import Mailings
+from mailings.services import send_message
 from mailings_message.models import Message
+from django.contrib import messages
 
 
 class HomeView(TemplateView):
@@ -83,4 +85,15 @@ class MailingDeleteView(DeleteView):
     def get_success_url(self):
         return reverse("mailings:mailing_detail", args={self.kwargs.get("pk")})
 
+
+def start_mailing(request, pk):
+    """Запускает рассылку по требованию"""
+    mailing = get_object_or_404(Mailings, pk=pk)
+
+    if send_message(pk, request):
+        messages.success(request, f"Рассылка '{mailing.message.subject}' успешно запущена!")
+    else:
+        messages.error(request, f"При запуске рассылки '{mailing.message.subject}' произошли ошибки")
+
+    return redirect('mailings:detail_mailing', pk=pk)
 

@@ -144,8 +144,8 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 AUTH_USER_MODEL = 'users.User'
 
-# LOGIN_REDIRECT_URL = '/catalog/'
-# LOGOUT_REDIRECT_URL = '/login/'
+LOGIN_REDIRECT_URL = '/mailings/'
+LOGOUT_REDIRECT_URL = '/login/'
 
 EMAIL_HOST = 'smtp.yandex.ru'
 EMAIL_PORT = 465

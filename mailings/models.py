@@ -36,12 +36,8 @@ class Mailings(models.Model):
 class AttemptSend(models.Model):
     """ Модель попытки отправки """
 
-    STATUS_CHOICES = [
-        ('success', 'Успешно'),
-        ('failed', 'Не успешно'),
-    ]
     attempt_time = models.DateTimeField(verbose_name='Дата и время попытки отправки', auto_now_add=True)
-    status = models.CharField(verbose_name='Статус', max_length=10, choices=STATUS_CHOICES, default='success')
+    status = models.BooleanField(verbose_name='Статус', default=False)
     server_response = models.CharField(verbose_name='Ответ сервера', max_length=255, blank=True, null=True)
     message = models.ForeignKey(Message, verbose_name='Сообщение', on_delete=models.CASCADE)
 

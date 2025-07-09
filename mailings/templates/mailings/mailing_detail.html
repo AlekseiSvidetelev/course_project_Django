@@ -28,9 +28,9 @@
                                 <li class="list-group-item">
                                     <strong>Дата окончания:</strong>
                                     {% if object.end_time %}
-                                        {{ object.end_time|date:"d F Y H:i" }}
+                                    {{ object.end_time|date:"d F Y H:i" }}
                                     {% else %}
-                                        <span class="text-muted">Не указана</span>
+                                    <span class="text-muted">Не указана</span>
                                     {% endif %}
                                 </li>
                                 <li class="list-group-item">
@@ -61,26 +61,26 @@
                         <div class="table-responsive">
                             <table class="table table-hover">
                                 <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>ФИО</th>
-                                        <th>Email</th>
-                                        <th>Комментарий</th>
-                                    </tr>
+                                <tr>
+                                    <th>#</th>
+                                    <th>ФИО</th>
+                                    <th>Email</th>
+                                    <th>Комментарий</th>
+                                </tr>
                                 </thead>
                                 <tbody>
-                                    {% for client in object.clients.all %}
-                                        <tr>
-                                            <td>{{ forloop.counter }}</td>
-                                            <td>{{ client.full_name }}</td>
-                                            <td>{{ client.email }}</td>
-                                            <td>{{ client.comment|truncatechars:50 }}</td>
-                                        </tr>
-                                    {% empty %}
-                                        <tr>
-                                            <td colspan="4" class="text-center">Нет получателей</td>
-                                        </tr>
-                                    {% endfor %}
+                                {% for client in object.clients.all %}
+                                <tr>
+                                    <td>{{ forloop.counter }}</td>
+                                    <td>{{ client.full_name }}</td>
+                                    <td>{{ client.email }}</td>
+                                    <td>{{ client.comment|truncatechars:50 }}</td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="4" class="text-center">Нет получателей</td>
+                                </tr>
+                                {% endfor %}
                                 </tbody>
                             </table>
                         </div>
@@ -90,34 +90,34 @@
                     <div class="mb-4">
                         <h5>История попыток отправки</h5>
                         {% if object.attempts.all %}
-                            <div class="table-responsive">
-                                <table class="table table-hover">
-                                    <thead>
-                                        <tr>
-                                            <th>Дата и время</th>
-                                            <th>Статус</th>
-                                            <th>Ответ сервера</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {% for attempt in object.attempts.all %}
-                                            <tr class="{% if attempt.status == 'success' %}table-success{% else %}table-danger{% endif %}">
-                                                <td>{{ attempt.attempt_time|date:"d F Y H:i" }}</td>
-                                                <td>
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                <tr>
+                                    <th>Дата и время</th>
+                                    <th>Статус</th>
+                                    <th>Ответ сервера</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for attempt in object.attempts.all %}
+                                <tr class="{% if attempt.status == 'success' %}table-success{% else %}table-danger{% endif %}">
+                                    <td>{{ attempt.attempt_time|date:"d F Y H:i" }}</td>
+                                    <td>
                                                     <span class="badge bg-{% if attempt.status == 'success' %}success{% else %}danger{% endif %}">
                                                         {{ attempt.get_status_display }}
                                                     </span>
-                                                </td>
-                                                <td>{{ attempt.server_response|default:"-" }}</td>
-                                            </tr>
-                                        {% endfor %}
-                                    </tbody>
-                                </table>
-                            </div>
+                                    </td>
+                                    <td>{{ attempt.server_response|default:"-" }}</td>
+                                </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
                         {% else %}
-                            <div class="alert alert-info">
-                                Нет данных о попытках отправки
-                            </div>
+                        <div class="alert alert-info">
+                            Нет данных о попытках отправки
+                        </div>
                         {% endif %}
                     </div>
                 </div>
@@ -133,7 +133,16 @@
                         <a href="{% url 'mailings:mailing_delete' object.id %}" class="btn btn-danger">
                             <i class="bi bi-trash"></i> Удалить
                         </a>
+
                     </div>
+                    {% if object.status != 'completed' %}
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-3">
+                        <a href="{% url 'mailings:start_mailing' object.pk %}"
+                           class="btn btn-success btn-lg">
+                            <i class="bi bi-send"></i> Запустить рассылку сейчас
+                        </a>
+                    </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
