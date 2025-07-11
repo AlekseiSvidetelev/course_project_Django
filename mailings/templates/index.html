@@ -6,7 +6,7 @@
     <div class="row justify-content-center py-3 py-md-5">
         <div class="col-12 col-lg-10 text-center">
             <h1 class="display-4 fw-bold text-primary mb-3 mb-md-4 animate__animated animate__fadeInDown">Панель мониторинга рассылок</h1>
-            <p class="lead text-muted fs-4 animate__animated animate__fadeIn animate__delay-1s">Контролируйте и управляйте вашими email-кампаниями</p>
+            <p class="lead text-muted fs-4 animate__animated animate__fadeIn animate__delay-1s"></p>
             <div class="mt-3 mt-md-4 animate__animated animate__fadeIn animate__delay-2s">
                 <span class="badge bg-primary me-2 mb-2 mb-md-0">Всего: {{ total_mailings }}</span>
                 <span class="badge bg-success me-2 mb-2 mb-md-0">Активных: {{ active_mailings }}</span>
@@ -65,8 +65,14 @@
 
     <!-- Quick Actions -->
     <div class="row justify-content-center mt-4 animate__animated animate__fadeIn animate__delay-1s mx-0 mx-md-3">
-        <div class="col-12 col-md-10 col-lg-8 text-center">
+        <div class="col-12 col-md-10 col-lg-11 text-center">
             <div class="d-grid gap-2 gap-sm-3 d-sm-flex justify-content-sm-center">
+                <a href="{% url 'mailings_message:create_message' %}" class="btn btn-primary btn-lg px-3 px-sm-4">
+                    <i class="bi bi-plus-circle me-1 me-sm-2"></i>Создать сообщение
+                </a>
+                <a href="{% url 'clients:clients_create' %}" class="btn btn-primary btn-lg px-3 px-sm-4">
+                    <i class="bi bi-plus-circle me-1 me-sm-2"></i>Добавить получателей
+                </a>
                 <a href="{% url 'mailings:mailing_create' %}" class="btn btn-primary btn-lg px-3 px-sm-4">
                     <i class="bi bi-plus-circle me-1 me-sm-2"></i>Создать рассылку
                 </a>

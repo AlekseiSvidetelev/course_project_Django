@@ -27,9 +27,9 @@
                         <dt class="col-sm-3">Результат отправки</dt>
                         <dd class="col-sm-9">
                             {% if attempt.status %}
-                                <span class="badge bg-success">Отправлено</span>
+                            <span class="badge bg-success">Отправлено</span>
                             {% else %}
-                                <span class="badge bg-danger">Ошибка</span>
+                            <span class="badge bg-danger">Ошибка</span>
                             {% endif %}
                         </dd>
 
@@ -37,7 +37,8 @@
                         <dd class="col-sm-9">{{ attempt.server_response }}</dd>
                     </dl>
 
-                    <a href="{% url 'mailings:attempt_list' %}" class="btn btn-secondary">Назад к списку попыток</a>
+                    <a href="{% url 'mailings:attempt_list' %}" class="btn btn-secondary">
+                        <i class="bi bi-arrow-left"></i>Назад к списку попыток</a>
                 </div>
             </div>
         </div>

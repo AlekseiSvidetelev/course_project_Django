@@ -22,10 +22,13 @@
                         <dd class="col-sm-9">{{ object.body|linebreaksbr }}</dd>
                     </dl>
 
-                    <a href="{% url 'mailings_message:list_messages' %}" class="btn btn-secondary btn-sm">Назад к списку
+                    <a href="{% url 'mailings_message:list_messages' %}" class="btn btn-secondary">
+                        <i class="bi bi-arrow-left"></i>Назад к списку
                         сообщений</a>
-                    <a href="{% url 'mailings_message:update_message' object.id %}" class="btn btn-info btn-sm">Редактировать</a>
-                    <a href="{% url 'mailings_message:delete_message' message.id %}" class="btn btn-danger btn-sm">Удалить</a>
+                    <a href="{% url 'mailings_message:update_message' object.id %}" class="btn btn-primary">
+                            <i class="bi bi-pencil"></i>Редактировать</a>
+                    <a href="{% url 'mailings_message:delete_message' message.id %}" class="btn btn-danger">
+                            <i class="bi bi-trash"></i>Удалить</a>
 
                 </div>
             </div>

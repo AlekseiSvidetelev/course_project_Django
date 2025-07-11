@@ -34,8 +34,10 @@
                             <td>{{ client.email }}</td>
                             <td>{{ client.comment|truncatewords:10 }}</td>
                             <td>
-                                <a href="{% url 'clients:clients_detail' client.id %}" class="btn btn-info btn-sm">Подробнее</a>
-                                <a href="{% url 'clients:clients_delete' client.id %}" class="btn btn-danger btn-sm">Удалить</a>
+                                <a href="{% url 'clients:clients_detail' client.id %}" class="btn btn-primary btn-sm">
+                                    <i class="bi bi-info"></i>Подробнее</a>
+                                <a href="{% url 'clients:clients_delete' client.id %}" class="btn btn-danger btn-sm">
+                                    <i class="bi bi-trash"></i>Удалить</a>
                             </td>
                         </tr>
                         {% endfor %}

@@ -19,11 +19,11 @@
                     <table class="table table-hover">
                         <thead>
                         <tr>
-                            <th scope="col">№</th>
-                            <th scope="col">Тема сообщения</th>
-                            <th scope="col">Статус</th>
-                            <th scope="col">Кол-во получателей</th>
-                            <th scope="col">Действие</th>
+                            <th scope="col" style="width: 5%;">№</th>
+                            <th scope="col" style="width: 45%;">Тема сообщения</th>
+                            <th scope="col" style="width: 15%;">Статус</th>
+                            <th scope="col" style="width: 10%;">Кол-во получателей</th>
+                            <th scope="col" style="width: 25%;">Действие</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -42,7 +42,9 @@
                             </td>
                             <td>{{ mailing.clients.count }}</td>
                             <td>
-                                <a href="{% url 'mailings:mailing_detail' mailing.id %}" class="btn btn-primary btn-sm">Подробнее</a>
+                                <a href="{% url 'mailings:mailing_detail' mailing.id %}" class="btn btn-primary btn-sm">
+                                    <i class="bi bi-info"></i>
+                                    Подробнее</a>
 
 
                                 {% if mailing.status != 'completed' %}
