@@ -1,76 +1,39 @@
-import logging
 from django.utils import timezone
 from django.core.mail import send_mail
 from django.conf import settings
 from .models import Mailings, AttemptSend, Client
-from mailings_message.models import Message
 
 
-def send_message(pk, request=None):
+
+def send_mailing(pk, request=None):
     """ Отправляет рассылку по требованию """
     try:
-
         mailing = Mailings.objects.get(pk=pk)
     except Mailings.DoesNotExist:
-
         return False
 
     now = timezone.now()
 
-
     if now < mailing.start_time:
-
-        AttemptSend.objects.create(
-            mailing=mailing,
-            status='failed',
-            server_response=(
-                f"Время рассылки еще не наступило "
-                f"(начало: {mailing.start_time}, сейчас: {now})"
-            )
-        )
-
         return False
 
     if mailing.end_time and now > mailing.end_time:
-
         mailing.status = 'completed'
         mailing.save()
-
-
-        AttemptSend.objects.create(
-            mailing=mailing,
-            status='failed',
-            server_response=(
-                f"Время рассылки истекло "
-                f"(окончание: {mailing.end_time}, сейчас: {now})"
-            )
-        )
-
         return False
-
 
     clients = mailing.clients.all()
     if not clients:
-
-        AttemptSend.objects.create(
-            mailing=mailing,
-            status='failed',
-            server_response="Нет получателей рассылки"
-        )
-
         return False
 
     subject = mailing.message.subject
     body = mailing.message.body
-
-    recipient_list = [client.email for client in clients]
 
     success_count = 0
     error_count = 0
 
     for client in clients:
         try:
-
             send_mail(
                 subject=subject,
                 message=body,
@@ -81,16 +44,20 @@ def send_message(pk, request=None):
 
             AttemptSend.objects.create(
                 mailing=mailing,
-                status='success',
-                server_response="Письмо успешно отправлено"
+                status=True,
+                server_response=f"Письмо успешно отправлено клиенту {client.email}",
+                email=client
             )
             success_count += 1
 
         except Exception as e:
+            error_msg = f"Ошибка при отправке клиенту {client.email}: {str(e)}"
+
             AttemptSend.objects.create(
                 mailing=mailing,
-                status='failed',
-                server_response=str(e)
+                status=False,
+                server_response=error_msg,
+                email=client
             )
             error_count += 1
 

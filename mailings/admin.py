@@ -5,7 +5,7 @@ from mailings.models import Mailings, AttemptSend
 
 @admin.register(Mailings)
 class MailingAdmin(admin.ModelAdmin):
-    list_display = ('show_clients', 'message', 'status', 'start_time', 'end_time')
+    list_display = ('id', 'show_clients', 'message', 'status', 'start_time', 'end_time')
     list_filter = ('status', 'start_time')
     filter_horizontal = ('clients', )
 
@@ -16,5 +16,5 @@ class MailingAdmin(admin.ModelAdmin):
 
 @admin.register(AttemptSend)
 class AttemptSendAdmin(admin.ModelAdmin):
-    list_display = ('message', 'status', 'attempt_time', 'server_response')
+    list_display = ('id', 'mailing', 'email', 'status', 'attempt_time', 'server_response')
     list_filter = ('status', 'attempt_time')

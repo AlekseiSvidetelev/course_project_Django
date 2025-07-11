@@ -1,3 +1,5 @@
+
+from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy, reverse
 
@@ -11,8 +13,8 @@ from django.views.generic import (
 
 from clients.models import Client
 from mailings.forms import MailingsForms
-from mailings.models import Mailings
-from mailings.services import send_message
+from mailings.models import Mailings, AttemptSend
+from mailings.services import send_mailing
 from mailings_message.models import Message
 from django.contrib import messages
 
@@ -21,8 +23,13 @@ class HomeView(TemplateView):
     """ Главная страница """
     template_name = 'index.html'
 
+
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['total_mailings'] = Mailings.objects.all().count()
+        context['active_mailings'] = Mailings.objects.filter(status='started').count()
+        context['unique_clients'] = Client.objects.all().count()
         return context
 
 
@@ -80,6 +87,7 @@ class MailingDeleteView(DeleteView):
 
     model = Mailings
     template_name = 'mailings/mailing_confirm_delete.html'
+    ordering = ['-id']
     success_url = reverse_lazy('mailings:mailings_list.html')
 
     def get_success_url(self):
@@ -90,10 +98,35 @@ def start_mailing(request, pk):
     """Запускает рассылку по требованию"""
     mailing = get_object_or_404(Mailings, pk=pk)
 
-    if send_message(pk, request):
-        messages.success(request, f"Рассылка '{mailing.message.subject}' успешно запущена!")
+    success = send_mailing(pk, request)
+
+    # if success:
+    #     mailings = f'Рассылка "{mailing.message.subject}" частично успешно запущена'
+    #     status = 'success'
+    # else:
+    #     mailings = f'Рассылка "{mailing.message.subject}" не запущена'
+    #     status = 'error'
+
+    referer = request.META.get('HTTP_REFERER')
+    if referer:
+        return HttpResponseRedirect(referer)
     else:
-        messages.error(request, f"При запуске рассылки '{mailing.message.subject}' произошли ошибки")
 
-    return redirect('mailings:detail_mailing', pk=pk)
+        return redirect('mailings:mailing_list')
 
+class AttemptListView(ListView):
+    """ Список попыток отправки """
+
+    model = AttemptSend
+    template_name = 'mailings/attempt_list.html'
+    context_object_name = 'attempts'
+    ordering = ['-attempt_time']
+    success_url = reverse_lazy('mailings:mailings_list')
+
+class AttemptDetailView(DetailView):
+    """ Просмотр попытки отправки """
+
+    model = AttemptSend
+    template_name = 'mailings/attempt_detail.html'
+    context_object_name = 'attempt'
+    success_url = reverse_lazy('mailings:mailings_list')

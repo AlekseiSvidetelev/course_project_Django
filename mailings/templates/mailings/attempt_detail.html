@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block title %}Детали попытки отправки{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="display-6 text-center">Детали попытки отправки</h1>
+    <p class="lead text-center">Просмотрите подробности конкретной попытки отправки.</p>
+
+    <div class="row justify-content-md-center mt-4">
+        <div class="col-md-12 col-sm-12">
+            <div class="card shadow">
+                <div class="card-body">
+                    <dl class="row">
+                        <dt class="col-sm-3">ID попытки</dt>
+                        <dd class="col-sm-9">{{ attempt.id }}</dd>
+
+                        <dt class="col-sm-3">Дата и время попытки</dt>
+                        <dd class="col-sm-9">{{ attempt.attempt_time|date:"d M Y H:i" }}</dd>
+
+                        <dt class="col-sm-3">Тема рассылки</dt>
+                        <dd class="col-sm-9">{{ attempt.mailing.message.subject }}</dd>
+
+                        <dt class="col-sm-3">Email клиента</dt>
+                        <dd class="col-sm-9">{{ attempt.email.email }}</dd>
+
+                        <dt class="col-sm-3">Результат отправки</dt>
+                        <dd class="col-sm-9">
+                            {% if attempt.status %}
+                                <span class="badge bg-success">Отправлено</span>
+                            {% else %}
+                                <span class="badge bg-danger">Ошибка</span>
+                            {% endif %}
+                        </dd>
+
+                        <dt class="col-sm-3">Ответ сервера</dt>
+                        <dd class="col-sm-9">{{ attempt.server_response }}</dd>
+                    </dl>
+
+                    <a href="{% url 'mailings:attempt_list' %}" class="btn btn-secondary">Назад к списку попыток</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
