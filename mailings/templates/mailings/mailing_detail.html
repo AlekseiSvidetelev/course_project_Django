@@ -100,19 +100,16 @@
                         </a>
                         {% endif %}
 
-                        {% if mailing.owner == request.user or request.user.is_superuser %}
+                        {% if object.owner == request.user or request.user.is_superuser %}
                         <a href="{% url 'mailings:mailing_update' object.id %}" class="btn btn-primary">
                             <i class="bi bi-pencil"></i> Редактировать
                         </a>
                         <a href="{% url 'mailings:mailing_delete' object.id %}" class="btn btn-danger">
                             <i class="bi bi-trash"></i> Удалить
                         </a>
-
-
                     </div>
-
                     {% endif %}
-                    {% if object.status != 'completed' %}
+                    {% if object.status != 'finished' %}
 
                     <a href="{% url 'mailings:start_mailing' object.pk %}"
                        class="btn btn-success">

@@ -17,8 +17,8 @@ from mailings.views import (
 app_name = MailingsConfig.name
 
 urlpatterns = [
-    path("home/", HomeView.as_view(), name="home"),
-    path("", MailingListView.as_view(), name="mailings_list"),
+    path("", HomeView.as_view(), name="home"),
+    path("mailings/", MailingListView.as_view(), name="mailings_list"),
     path("create/", MailingCreateView.as_view(), name="mailing_create"),
     path("detail/<int:pk>/", MailingDetailView.as_view(), name="mailing_detail"),
     path("update/<int:pk>/", MailingUpdateView.as_view(), name="mailing_update"),

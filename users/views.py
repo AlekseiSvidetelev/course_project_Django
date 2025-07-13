@@ -48,7 +48,6 @@ class UserCreateView(CreateView):
         return super().form_valid(form)
 
 
-
 def email_verification(request, token):
     """Подтверждение регистрации."""
     user = get_object_or_404(User, token=token)
@@ -145,15 +144,12 @@ class UserListView(ListView):
         user = User.objects.get(id=user_id)
 
         if action == "block":
-            user.is_active = False  # Блокируем пользователя
+            user.is_active = False
             user.save()
             messages.success(request, f"Пользователь {user.email} заблокирован")
-        elif action == "unblock":
-            user.is_active = True  # Разблокируем пользователя
-            user.save()
-            messages.success(request, f"Пользователь {user.email} разблокирован")
 
         return redirect("users:user_list")
+
 
 class UserProfileView(LoginRequiredMixin, DetailView):
 
@@ -166,8 +162,9 @@ class UserProfileView(LoginRequiredMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['mailings_count'] = Mailings.objects.filter(owner=self.request.user).count()
-        context['active_mailings'] = Mailings.objects.filter(owner=self.request.user, status='started').count()
+        user = self.request.user
+        context["mailings_count"] = Mailings.objects.filter(owner=user).count()
+        context["active_mailings"] = Mailings.objects.filter(owner=user, status="started").count()
         return context
 
 
@@ -180,6 +177,3 @@ class UserProfileUpdateView(UpdateView):
 
     def get_object(self, queryset=None):
         return self.request.user
-
-
-

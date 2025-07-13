@@ -1,7 +1,8 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy, reverse
+from django.contrib import messages
 
 from django.views.generic import (
     ListView,
@@ -12,6 +13,7 @@ from django.views.generic import (
     TemplateView,
     RedirectView,
 )
+
 
 from clients.models import Client
 from mailings.forms import MailingsForms
@@ -115,15 +117,14 @@ class MailingDeleteView(LoginRequiredMixin, DeleteView):
     model = Mailings
     template_name = "mailings/mailing_confirm_delete.html"
     ordering = ["-id"]
-    success_url = reverse_lazy("mailings:mailings_list.html")
-
-    def get_success_url(self):
-        return reverse("mailings:mailing_detail", args={self.kwargs.get("pk")})
+    success_url = reverse_lazy("mailings:mailings_list")
 
 
 def start_mailing(request, pk):
     """Запускает рассылку по требованию"""
     mailing = get_object_or_404(Mailings, pk=pk)
+    if mailing.status == Mailings.STATUS_CHOICES[2][0]:
+        raise Http404("Рассылка уже завершена и не может быть запущена вновь.")
     success = send_mailing(pk, request)
     referer = request.META.get("HTTP_REFERER")
     if referer:

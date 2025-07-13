@@ -39,13 +39,13 @@ class UserProfileUpdateForm(StyleFormMixin, forms.ModelForm):
         fields = ["first_name", "last_name", "phone", "avatar", "tg_name"]
 
     def __init__(self, *args, **kwargs):
-        self.request = kwargs.pop('request', None)
+        self.request = kwargs.pop("request", None)
         super().__init__(*args, **kwargs)
 
     def save(self, commit=True):
         instance = super().save(commit=False)
-        if 'avatar' in self.files and self.request:
-            instance.avatar = self.request.FILES['avatar']
+        if "avatar" in self.files and self.request:
+            instance.avatar = self.request.FILES["avatar"]
         if commit:
             instance.save()
         return instance
