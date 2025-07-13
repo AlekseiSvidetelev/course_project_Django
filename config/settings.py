@@ -144,8 +144,8 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 AUTH_USER_MODEL = 'users.User'
 
-LOGIN_REDIRECT_URL = '/mailings/'
-LOGOUT_REDIRECT_URL = '/login/'
+LOGIN_REDIRECT_URL = '/home/'
+LOGOUT_REDIRECT_URL = '/home/'
 
 EMAIL_HOST = 'smtp.yandex.ru'
 EMAIL_PORT = 465
@@ -167,3 +167,6 @@ LOGIN_URL = '/users/login'
 #             'LOCATION': 'redis://127.0.0.1:6379/1',
 #         }
 #     }
+
+SITE_NAME = "Моя рассылка"
+

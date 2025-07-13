@@ -19,7 +19,7 @@
                     <table class="table table-hover">
                         <thead>
                         <tr>
-                            <th scope="col" style="width: 5%;">№</th>
+                            <th scope="col" style="width: 5%;">ID</th>
                             <th scope="col" style="width: 45%;">Тема сообщения</th>
                             <th scope="col" style="width: 15%;">Статус</th>
                             <th scope="col" style="width: 10%;">Кол-во получателей</th>
@@ -29,7 +29,7 @@
                         <tbody>
                         {% for mailing in mailings %}
                         <tr>
-                            <td>{{ forloop.counter }}</td>
+                            <td>{{ mailing.id }}</td>
                             <td>{{ mailing.message.subject }}</td>
                             <td>
                                 {% if mailing.status == 'created' %}
@@ -47,13 +47,20 @@
                                     Подробнее</a>
 
 
-                                {% if mailing.status != 'completed' %}
+                                {% if mailing.status != 'finished' and mailing.owner == request.user %}
                                 <a href="{% url 'mailings:start_mailing' mailing.id %}"
                                    class="btn btn-success btn-sm"
                                    onclick="return confirm('Запустить рассылку сейчас?')">
-                                    <i class="bi bi-send"></i>
-                                    Запустить
+                                    <i class="bi bi-send"></i> Запустить
                                 </a>
+                                {% endif %}
+
+                                {% if request.user.is_superuser or perms.mailings.can_stoped %}
+                                {% if mailing.status != 'finished' %}
+                                <a href="{% url 'mailings:mailing_stop' mailing.id %}" class="btn btn-danger btn-sm">
+                                    <i class="bi bi-sign-stop"></i> Остановить
+                                </a>
+                                {% endif %}
                                 {% endif %}
                             </td>
                         </tr>

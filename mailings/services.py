@@ -1,12 +1,11 @@
 from django.utils import timezone
 from django.core.mail import send_mail
 from django.conf import settings
-from .models import Mailings, AttemptSend, Client
-
+from .models import Mailings, AttemptSend
 
 
 def send_mailing(pk, request=None):
-    """ Отправляет рассылку по требованию """
+    """Отправляет рассылку по требованию"""
     try:
         mailing = Mailings.objects.get(pk=pk)
     except Mailings.DoesNotExist:
@@ -18,7 +17,7 @@ def send_mailing(pk, request=None):
         return False
 
     if mailing.end_time and now > mailing.end_time:
-        mailing.status = 'completed'
+        mailing.status = "completed"
         mailing.save()
         return False
 
@@ -46,23 +45,18 @@ def send_mailing(pk, request=None):
                 mailing=mailing,
                 status=True,
                 server_response=f"Письмо успешно отправлено клиенту {client.email}",
-                email=client
+                email=client,
             )
             success_count += 1
 
         except Exception as e:
             error_msg = f"Ошибка при отправке клиенту {client.email}: {str(e)}"
 
-            AttemptSend.objects.create(
-                mailing=mailing,
-                status=False,
-                server_response=error_msg,
-                email=client
-            )
+            AttemptSend.objects.create(mailing=mailing, status=False, server_response=error_msg, email=client)
             error_count += 1
 
-    if mailing.status == 'created' and success_count > 0:
-        mailing.status = 'started'
+    if mailing.status == "created" and success_count > 0:
+        mailing.status = "started"
         mailing.save()
 
     return success_count > 0

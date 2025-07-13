@@ -13,9 +13,7 @@ class User(AbstractUser):
         null=True,
         help_text="Введите ваш номер телефона",
     )
-    tg_name = models.CharField(
-        verbose_name="Ник в телеграм", max_length=100, blank=True, null=True
-    )
+    tg_name = models.CharField(verbose_name="Ник в телеграм", max_length=100, blank=True, null=True)
     avatar = models.ImageField(
         verbose_name="Аватар",
         upload_to="users/avatars",
@@ -24,9 +22,10 @@ class User(AbstractUser):
         help_text="Загрузите ваш аватар",
     )
 
-    token = models.CharField(
-        verbose_name="Токен", max_length=255, blank=True, null=True
-    )
+    token = models.CharField(verbose_name="Токен", max_length=255, blank=True, null=True)
+
+    reset_token = models.CharField(max_length=255, blank=True, null=True, verbose_name="Токен сброса пароля")
+    reset_token_created = models.DateTimeField(blank=True, null=True, verbose_name="Время создания токена сброса")
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
