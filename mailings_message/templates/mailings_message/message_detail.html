@@ -27,9 +27,9 @@
                         сообщений</a>
                     {% if message.owner == request.user or request.user.is_superuser %}
                     <a href="{% url 'mailings_message:update_message' object.id %}" class="btn btn-primary">
-                            <i class="bi bi-pencil"></i>Редактировать</a>
+                        <i class="bi bi-pencil"></i>Редактировать</a>
                     <a href="{% url 'mailings_message:delete_message' message.id %}" class="btn btn-danger">
-                            <i class="bi bi-trash"></i>Удалить</a>
+                        <i class="bi bi-trash"></i>Удалить</a>
                     {% endif %}
 
                 </div>

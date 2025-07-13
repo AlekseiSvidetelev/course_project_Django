@@ -175,6 +175,12 @@
                        class="list-group-item list-group-item-action rounded-pill {% if request.resolver_match.url_name == 'attempt_list' %}active{% endif %}">
                        <i class="bi bi-list-check me-2"></i> Все попытки
                     </a>
+                    {% if user.is_superuser or perms.users.can_view_all_users %}
+                    <a href="{% url 'users:user_list' %}"
+                       class="list-group-item list-group-item-action rounded-pill {% if request.resolver_match.url_name == 'user_list' %}active{% endif %}">
+                       <i class="bi bi-person-lines-fill"></i> Пользователи
+                    </a>
+                    {% endif %}
                 </div>
             </nav>
 

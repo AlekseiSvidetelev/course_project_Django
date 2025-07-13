@@ -130,27 +130,24 @@ class UserListView(ListView):
     template_name = "users/user_list.html"
     context_object_name = "users"
 
-    def get_queryset(self):
-        """Фильтрация пользователей (исключаем суперпользователей)"""
-        return User.objects.filter(is_superuser=False)
+    def test_func(self):
+        return self.request.user.is_superuser or self.request.user.has_perm('users.can_view_all_users')
 
     def post(self, request, *args, **kwargs):
         """Обработка блокировки/разблокировки"""
         user_id = request.POST.get('user_id')
         action = request.POST.get('action')
 
-        try:
-            user = User.objects.get(id=user_id)
+        user = User.objects.get(id=user_id)
 
-            if action == 'block':
-                user.block()
-                messages.success(request, f"Пользователь {user.email} заблокирован")
-            elif action == 'unblock':
-                user.unblock()
-                messages.success(request, f"Пользователь {user.email} разблокирован")
-
-        except User.DoesNotExist:
-            messages.error(request, "Пользователь не найден")
+        if action == 'block':
+            user.is_active = False  # Блокируем пользователя
+            user.save()
+            messages.success(request, f"Пользователь {user.email} заблокирован")
+        elif action == 'unblock':
+            user.is_active = True  # Разблокируем пользователя
+            user.save()
+            messages.success(request, f"Пользователь {user.email} разблокирован")
 
         return redirect('users:user_list')
 
