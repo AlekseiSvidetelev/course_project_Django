@@ -129,103 +129,106 @@
     <title>{% block title %}{% endblock %}</title>
 </head>
 <body>
-    <header class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
-        <div class="container-fluid">
-            <button class="navbar-toggler d-lg-none me-2" type="button" data-bs-toggle="collapse" data-bs-target="#sidebar">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <a class="navbar-brand" href="{% url 'mailings:home' %}">
-                <i class="bi bi-envelope"></i> Моя рассылка
+<header class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
+    <div class="container-fluid">
+        <button class="navbar-toggler d-lg-none me-2" type="button" data-bs-toggle="collapse" data-bs-target="#sidebar">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <a class="navbar-brand" href="{% url 'mailings:home' %}">
+            <i class="bi bi-envelope"></i> Моя рассылка
+        </a>
+        <div class="d-flex">
+            {% if user.is_authenticated %}
+            <a href="{% url 'users:profile' %}" class="btn btn-outline-light me-2">
+                <i class="bi bi-person-fill-gear"></i> Профиль
             </a>
-            <div class="d-flex">
-                {% if user.is_authenticated %}
-                <a href="{% url 'users:logout_confirm' %}" class="btn btn-outline-light me-2">
-                    <i class="bi bi-box-arrow-right"></i> Выход
+            <a href="{% url 'users:logout_confirm' %}" class="btn btn-outline-light me-2">
+                <i class="bi bi-box-arrow-right"></i> Выход
+            </a>
+            {% else %}
+            <a href="{% url 'users:login' %}" class="btn btn-outline-light me-2">
+                <i class="bi bi-box-arrow-in-right"></i> Войти
+            </a>
+            <a href="{% url 'users:register' %}" class="btn btn-light">
+                <i class="bi bi-person-plus"></i> Регистрация
+            </a>
+            {% endif %}
+        </div>
+    </div>
+</header>
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar -->
+        <nav id="sidebar" class="sidebar collapse d-lg-block">
+            <div class="list-group w-100 p-3">
+                <a href="{% url 'mailings_message:list_messages' %}"
+                   class="list-group-item list-group-item-action rounded-pill {% if request.resolver_match.url_name == 'list_messages' %}active{% endif %}">
+                    <i class="bi bi-chat-square-text me-2"></i> Сообщения
                 </a>
-                {% else %}
-                <a href="{% url 'users:login' %}" class="btn btn-outline-light me-2">
-                    <i class="bi bi-box-arrow-in-right"></i> Войти
+                <a href="{% url 'clients:clients_list' %}"
+                   class="list-group-item list-group-item-action rounded-pill {% if request.resolver_match.url_name == 'clients_list' %}active{% endif %}">
+                    <i class="bi bi-people me-2"></i> Получатели
                 </a>
-                <a href="{% url 'users:register' %}" class="btn btn-light">
-                    <i class="bi bi-person-plus"></i> Регистрация
+                <a href="{% url 'mailings:mailings_list' %}"
+                   class="list-group-item list-group-item-action rounded-pill {% if request.resolver_match.url_name == 'mailings_list' %}active{% endif %}">
+                    <i class="bi bi-send me-2"></i> Рассылки
+                </a>
+                <a href="{% url 'mailings:attempt_list' %}"
+                   class="list-group-item list-group-item-action rounded-pill {% if request.resolver_match.url_name == 'attempt_list' %}active{% endif %}">
+                    <i class="bi bi-list-check me-2"></i> Все попытки
+                </a>
+                {% if user.is_superuser or perms.users.can_view_all_users %}
+                <a href="{% url 'users:user_list' %}"
+                   class="list-group-item list-group-item-action rounded-pill {% if request.resolver_match.url_name == 'user_list' %}active{% endif %}">
+                    <i class="bi bi-person-lines-fill"></i> Пользователи
                 </a>
                 {% endif %}
             </div>
-        </div>
-    </header>
+        </nav>
 
-    <div class="container-fluid">
-        <div class="row">
-            <!-- Sidebar -->
-            <nav id="sidebar" class="sidebar collapse d-lg-block">
-                <div class="list-group w-100 p-3">
-                    <a href="{% url 'mailings_message:list_messages' %}"
-                       class="list-group-item list-group-item-action rounded-pill {% if request.resolver_match.url_name == 'list_messages' %}active{% endif %}">
-                       <i class="bi bi-chat-square-text me-2"></i> Сообщения
-                    </a>
-                    <a href="{% url 'clients:clients_list' %}"
-                       class="list-group-item list-group-item-action rounded-pill {% if request.resolver_match.url_name == 'clients_list' %}active{% endif %}">
-                       <i class="bi bi-people me-2"></i> Получатели
-                    </a>
-                    <a href="{% url 'mailings:mailings_list' %}"
-                       class="list-group-item list-group-item-action rounded-pill {% if request.resolver_match.url_name == 'mailings_list' %}active{% endif %}">
-                       <i class="bi bi-send me-2"></i> Рассылки
-                    </a>
-                    <a href="{% url 'mailings:attempt_list' %}"
-                       class="list-group-item list-group-item-action rounded-pill {% if request.resolver_match.url_name == 'attempt_list' %}active{% endif %}">
-                       <i class="bi bi-list-check me-2"></i> Все попытки
-                    </a>
-                    {% if user.is_superuser or perms.users.can_view_all_users %}
-                    <a href="{% url 'users:user_list' %}"
-                       class="list-group-item list-group-item-action rounded-pill {% if request.resolver_match.url_name == 'user_list' %}active{% endif %}">
-                       <i class="bi bi-person-lines-fill"></i> Пользователи
-                    </a>
-                    {% endif %}
-                </div>
-            </nav>
-
-            <!-- Main content -->
-            <main class="main-content">
-                {% block content %}{% endblock %}
-            </main>
-        </div>
+        <!-- Main content -->
+        <main class="main-content">
+            {% block content %}{% endblock %}
+        </main>
     </div>
+</div>
 
-    <footer class="bg-light py-3 mt-auto">
-        <div class="container text-center">
-            <small class="text-muted">© {% now "Y" %} Моя рассылка. SkyStudent</small>
-        </div>
-    </footer>
+<footer class="bg-light py-3 mt-auto">
+    <div class="container text-center">
+        <small class="text-muted">© {% now "Y" %} Моя рассылка. SkyStudent</small>
+    </div>
+</footer>
 
-    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const sidebarToggler = document.querySelector('[data-bs-target="#sidebar"]');
-            const sidebar = document.getElementById('sidebar');
+<script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const sidebarToggler = document.querySelector('[data-bs-target="#sidebar"]');
+        const sidebar = document.getElementById('sidebar');
 
-            if (sidebarToggler && sidebar) {
-                sidebarToggler.addEventListener('click', function() {
-                    sidebar.classList.toggle('show');
-                });
+        if (sidebarToggler && sidebar) {
+            sidebarToggler.addEventListener('click', function() {
+                sidebar.classList.toggle('show');
+            });
+        }
+
+        document.addEventListener('click', function(e) {
+            if (window.innerWidth < 992 && !sidebar.contains(e.target) &&
+                e.target !== sidebarToggler && !sidebarToggler.contains(e.target)) {
+                sidebar.classList.remove('show');
             }
+        });
 
-            document.addEventListener('click', function(e) {
-                if (window.innerWidth < 992 && !sidebar.contains(e.target) &&
-                    e.target !== sidebarToggler && !sidebarToggler.contains(e.target)) {
+        // Автоматическое закрытие sidebar при переходе по ссылке на мобильных
+        const sidebarLinks = document.querySelectorAll('#sidebar a');
+        sidebarLinks.forEach(link => {
+            link.addEventListener('click', function() {
+                if (window.innerWidth < 992) {
                     sidebar.classList.remove('show');
                 }
             });
-
-            // Автоматическое закрытие sidebar при переходе по ссылке на мобильных
-            const sidebarLinks = document.querySelectorAll('#sidebar a');
-            sidebarLinks.forEach(link => {
-                link.addEventListener('click', function() {
-                    if (window.innerWidth < 992) {
-                        sidebar.classList.remove('show');
-                    }
-                });
-            });
         });
-    </script>
+    });
+</script>
 </body>
 </html>

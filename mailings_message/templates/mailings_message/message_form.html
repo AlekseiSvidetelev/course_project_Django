@@ -1,11 +1,11 @@
 {% extends 'base.html' %}
 
 {% block title %}
-    {% if message.id %}
-        Редактирование сообщения
-    {% else %}
-        Создание сообщения
-    {% endif %}
+{% if message.id %}
+Редактирование сообщения
+{% else %}
+Создание сообщения
+{% endif %}
 {% endblock %}
 
 {% block content %}
@@ -22,7 +22,8 @@
 
                         <div class="mb-3">
                             <label for="id_subject" class="form-label">Тема сообщения</label>
-                            <input type="text" class="form-control" id="id_subject" name="subject" value="{% if message.subject %}{{ message.subject }}{% endif %}" required>
+                            <input type="text" class="form-control" id="id_subject" name="subject"
+                                   value="{% if message.subject %}{{ message.subject }}{% endif %}" required>
                         </div>
 
                         <div class="mb-3">
@@ -32,9 +33,9 @@
 
                         <button type="submit" class="btn btn-primary">
                             {% if message.id %}
-                                Сохранить изменения
+                            Сохранить изменения
                             {% else %}
-                                Создать сообщение
+                            Создать сообщение
                             {% endif %}
                         </button>
                         <a href="{% url 'mailings_message:list_messages' %}" class="btn btn-secondary ml-2">Отмена</a>

@@ -31,3 +31,21 @@ class CustomSetPasswordForm(SetPasswordForm):
         super().__init__(*args, **kwargs)
         for field in self.fields.values():
             field.widget.attrs["class"] = "form-control"
+
+
+class UserProfileUpdateForm(StyleFormMixin, forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ["first_name", "last_name", "phone", "avatar", "tg_name"]
+
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop('request', None)
+        super().__init__(*args, **kwargs)
+
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+        if 'avatar' in self.files and self.request:
+            instance.avatar = self.request.FILES['avatar']
+        if commit:
+            instance.save()
+        return instance

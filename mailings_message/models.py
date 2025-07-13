@@ -15,7 +15,7 @@ class Message(models.Model):
         verbose_name = "Сообщение"
         verbose_name_plural = "Сообщения"
         permissions = [
-            ('can_see_all_messages', 'Можно видеть все сообщения'),
+            ("can_see_all_messages", "Можно видеть все сообщения"),
         ]
 
     def __str__(self):

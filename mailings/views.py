@@ -9,7 +9,8 @@ from django.views.generic import (
     CreateView,
     UpdateView,
     DeleteView,
-    TemplateView, RedirectView,
+    TemplateView,
+    RedirectView,
 )
 
 from clients.models import Client
@@ -51,7 +52,7 @@ class MailingListView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         user = self.request.user
-        if user.is_superuser  or user.has_perm("mailings.can_stoped"):
+        if user.is_superuser or user.has_perm("mailings.can_stoped"):
             return Mailings.objects.all()
         else:
             return Mailings.objects.filter(owner=user)
@@ -78,7 +79,7 @@ class MailingCreateView(LoginRequiredMixin, CreateView):
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        kwargs['user'] = self.request.user
+        kwargs["user"] = self.request.user
         return kwargs
 
 
@@ -167,10 +168,10 @@ class MailingStopView(LoginRequiredMixin, UserPassesTestMixin, RedirectView):
     """Представление для остановки рассылки"""
 
     def test_func(self):
-        return self.request.user.is_superuser or self.request.user.has_perm('mailings.can_stoped')
+        return self.request.user.is_superuser or self.request.user.has_perm("mailings.can_stoped")
 
     def get_redirect_url(self, *args, **kwargs):
-        mailing = Mailings.objects.get(pk=kwargs['pk'])
-        mailing.status = 'finished'
+        mailing = Mailings.objects.get(pk=kwargs["pk"])
+        mailing.status = "finished"
         mailing.save()
-        return reverse_lazy('mailings:mailing_detail', args=(mailing.pk,))
+        return reverse_lazy("mailings:mailing_detail", args=(mailing.pk,))

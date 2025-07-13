@@ -15,7 +15,7 @@ class MessageListView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         user = self.request.user
-        if user.is_superuser or user.has_perm('mailings_message.can_see_all_messages'):
+        if user.is_superuser or user.has_perm("mailings_message.can_see_all_messages"):
             return Message.objects.all()
         else:
             return Message.objects.filter(owner=user)

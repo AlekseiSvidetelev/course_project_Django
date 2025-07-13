@@ -8,7 +8,8 @@ from users.views import (
     UserCreateView,
     email_verification,
     CustomPasswordResetRequestView,
-    CustomPasswordResetConfirmView, UserListView,
+    CustomPasswordResetConfirmView,
+    UserListView, UserProfileView, UserProfileUpdateView,
 )
 
 app_name = UsersConfig.name
@@ -33,5 +34,7 @@ urlpatterns = [
         TemplateView.as_view(template_name="users/password_reset_complete.html"),
         name="password_reset_complete",
     ),
-    path('users/', UserListView.as_view(), name='user_list'),
+    path("users/", UserListView.as_view(), name="user_list"),
+    path("profile/", UserProfileView.as_view(template_name="users/profile.html"), name="profile"),
+    path("profile/update/", UserProfileUpdateView.as_view(template_name="users/profile_update.html"), name="profile_update"),
 ]

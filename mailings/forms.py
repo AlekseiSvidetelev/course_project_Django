@@ -27,9 +27,9 @@ class MailingsForms(StyleFormMixin, forms.ModelForm):
         fields = ["message", "clients"]
 
     def __init__(self, *args, **kwargs):
-        user = kwargs.pop('user', None)
+        user = kwargs.pop("user", None)
         super().__init__(*args, **kwargs)
 
         if user:
-            self.fields['clients'].queryset = Client.objects.filter(owner=user)
-            self.fields['message'].queryset = Message.objects.filter(owner=user)
+            self.fields["clients"].queryset = Client.objects.filter(owner=user)
+            self.fields["message"].queryset = Message.objects.filter(owner=user)

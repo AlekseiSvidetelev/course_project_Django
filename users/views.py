@@ -1,6 +1,7 @@
-
+from django.contrib.auth import get_user_model
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, get_object_or_404
-from django.views.generic import FormView, CreateView
+from django.views.generic import FormView, CreateView, UpdateView, DetailView
 from django.utils import timezone
 
 from django.core.mail import send_mail
@@ -10,13 +11,15 @@ import secrets
 
 
 from config.settings import EMAIL_HOST_USER
-from .forms import UserRegisterForm, PasswordResetRequestForm, CustomSetPasswordForm
+from mailings.models import Mailings
+from .forms import UserRegisterForm, PasswordResetRequestForm, CustomSetPasswordForm, UserProfileUpdateForm
 
 from django.views.generic import ListView
 from django.urls import reverse_lazy
 from django.shortcuts import redirect
 from django.contrib import messages
 from .models import User
+
 
 class UserCreateView(CreateView):
     """Регистрация пользователя."""
@@ -43,6 +46,7 @@ class UserCreateView(CreateView):
         messages.success = (self.request, "Регистрация прошла успешно. Проверьте почту для подтверждения регистрации.")
 
         return super().form_valid(form)
+
 
 
 def email_verification(request, token):
@@ -131,23 +135,51 @@ class UserListView(ListView):
     context_object_name = "users"
 
     def test_func(self):
-        return self.request.user.is_superuser or self.request.user.has_perm('users.can_view_all_users')
+        return self.request.user.is_superuser or self.request.user.has_perm("users.can_view_all_users")
 
     def post(self, request, *args, **kwargs):
         """Обработка блокировки/разблокировки"""
-        user_id = request.POST.get('user_id')
-        action = request.POST.get('action')
+        user_id = request.POST.get("user_id")
+        action = request.POST.get("action")
 
         user = User.objects.get(id=user_id)
 
-        if action == 'block':
+        if action == "block":
             user.is_active = False  # Блокируем пользователя
             user.save()
             messages.success(request, f"Пользователь {user.email} заблокирован")
-        elif action == 'unblock':
+        elif action == "unblock":
             user.is_active = True  # Разблокируем пользователя
             user.save()
             messages.success(request, f"Пользователь {user.email} разблокирован")
 
-        return redirect('users:user_list')
+        return redirect("users:user_list")
+
+class UserProfileView(LoginRequiredMixin, DetailView):
+
+    model = User
+    template_name = "users/profile.html"
+    context_object_name = "profile"
+
+    def get_object(self, queryset=None):
+        return self.request.user
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['mailings_count'] = Mailings.objects.filter(owner=self.request.user).count()
+        context['active_mailings'] = Mailings.objects.filter(owner=self.request.user, status='started').count()
+        return context
+
+
+class UserProfileUpdateView(UpdateView):
+
+    model = User
+    form_class = UserProfileUpdateForm
+    template_name = "users/profile_update.html"
+    success_url = reverse_lazy("users:profile")
+
+    def get_object(self, queryset=None):
+        return self.request.user
+
+
 

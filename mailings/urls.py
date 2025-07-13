@@ -10,7 +10,8 @@ from mailings.views import (
     MailingCreateView,
     start_mailing,
     AttemptListView,
-    AttemptDetailView, MailingStopView,
+    AttemptDetailView,
+    MailingStopView,
 )
 
 app_name = MailingsConfig.name
@@ -25,5 +26,5 @@ urlpatterns = [
     path("start/<int:pk>/", start_mailing, name="start_mailing"),
     path("attempts/", AttemptListView.as_view(), name="attempt_list"),
     path("attempts/<int:pk>/", AttemptDetailView.as_view(), name="attempt_detail"),
-    path('stop/<int:pk>/', MailingStopView.as_view(), name='mailing_stop'),
+    path("stop/<int:pk>/", MailingStopView.as_view(), name="mailing_stop"),
 ]

@@ -27,7 +27,7 @@ class Mailings(models.Model):
         verbose_name = "Рассылка"
         verbose_name_plural = "Рассылки"
         permissions = [
-            ('can_stoped', 'Может остановить рассылку'),
+            ("can_stoped", "Может остановить рассылку"),
         ]
 
     def __str__(self):

@@ -16,9 +16,7 @@ class Client(models.Model):
     class Meta:
         verbose_name = "Получатель"
         verbose_name_plural = "Получатели"
-        permissions = (
-            ('view_all_clients', "Может просматривать всех получателей"),
-        )
+        permissions = (("view_all_clients", "Может просматривать всех получателей"),)
 
     def __str__(self):
         if self.full_name:
