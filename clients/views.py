@@ -5,6 +5,7 @@ from django.views.generic import CreateView, ListView, UpdateView, DeleteView, D
 
 from clients.forms import ClientForm
 from clients.models import Client
+from clients.services import get_clients_from_cache_for_user, get_client_from_cache_for_superuser
 
 
 class ClientsListView(LoginRequiredMixin, ListView):
@@ -17,9 +18,9 @@ class ClientsListView(LoginRequiredMixin, ListView):
     def get_queryset(self):
         user = self.request.user
         if user.is_superuser or user.has_perm("clients.view_all_clients"):
-            return Client.objects.all()
+            return get_client_from_cache_for_superuser()
         else:
-            return Client.objects.filter(owner=self.request.user)
+            return get_clients_from_cache_for_user(user)
 
 
 class ClientsDetailView(LoginRequiredMixin, DetailView):

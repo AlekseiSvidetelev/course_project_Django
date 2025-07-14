@@ -1,6 +1,9 @@
+from django.core.cache import cache
 from django.utils import timezone
 from django.core.mail import send_mail
 from django.conf import settings
+
+from config.settings import CACHE_ENABLED
 from .models import Mailings, AttemptSend
 
 
@@ -60,3 +63,55 @@ def send_mailing(pk, request=None):
         mailing.save()
 
     return success_count > 0
+
+
+def get_mailings_from_cache_for_user(user):
+    """ Получение списка рассылок из кэша для пользователя"""
+    if not CACHE_ENABLED:
+        return Mailings.objects.filter(owner=user)
+    key = f"mailings_{user.id}"
+    mailings = cache.get(key)
+    if mailings is not None:
+        return mailings
+    mailings = Mailings.objects.filter(owner=user)
+    cache.set(key, mailings, timeout=60*60)
+    return mailings
+
+
+def get_mailings_from_cache_for_superuser():
+    """ Получение списка рассылок из кэша для суперпользователя"""
+    if not CACHE_ENABLED:
+        return Mailings.objects.all()
+    key = 'mailings'
+    mailings = cache.get(key)
+    if mailings is not None:
+        return mailings
+    clients = Mailings.objects.all()
+    cache.set(key, clients, timeout=60*60)
+    return clients
+
+
+def get_attempt_from_cache_for_user(user):
+    """ Получение списка попыток отправки из кэша для пользователя"""
+    if not CACHE_ENABLED:
+        return AttemptSend.objects.filter(owner=user)
+    key = f"attempts_{user.id}"
+    attempts = cache.get(key)
+    if attempts is not None:
+        return attempts
+    attempts = AttemptSend.objects.filter(owner=user)
+    cache.set(key, attempts, timeout=60*60)
+    return attempts
+
+
+def get_attempt_from_cache_for_superuser():
+    """ Получение списка попыток отправки из кэша для суперпользователя"""
+    if not CACHE_ENABLED:
+        return AttemptSend.objects.all()
+    key = 'attempts'
+    attempts = cache.get(key)
+    if attempts is not None:
+        return attempts
+    attempts = AttemptSend.objects.all()
+    cache.set(key, attempts, timeout=60*60)
+    return attempts

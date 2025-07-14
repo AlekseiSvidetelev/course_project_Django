@@ -4,6 +4,8 @@ from django.views.generic import CreateView, ListView, UpdateView, DeleteView, D
 
 from mailings_message.models import Message
 from mailings_message.forms import MessageForms
+from mailings_message.services import get_mailings_message_from_cache_for_superuser, \
+    get_mailings_message_from_cache_for_user
 
 
 class MessageListView(LoginRequiredMixin, ListView):
@@ -16,9 +18,9 @@ class MessageListView(LoginRequiredMixin, ListView):
     def get_queryset(self):
         user = self.request.user
         if user.is_superuser or user.has_perm("mailings_message.can_see_all_messages"):
-            return Message.objects.all()
+            return get_mailings_message_from_cache_for_superuser()
         else:
-            return Message.objects.filter(owner=user)
+            return get_mailings_message_from_cache_for_user(user)
 
 
 class MessageCreateView(LoginRequiredMixin, CreateView):

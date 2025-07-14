@@ -2,7 +2,6 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy, reverse
-from django.contrib import messages
 
 from django.views.generic import (
     ListView,
@@ -18,7 +17,8 @@ from django.views.generic import (
 from clients.models import Client
 from mailings.forms import MailingsForms
 from mailings.models import Mailings, AttemptSend
-from mailings.services import send_mailing
+from mailings.services import send_mailing, get_mailings_from_cache_for_superuser, get_mailings_from_cache_for_user, \
+    get_attempt_from_cache_for_user, get_attempt_from_cache_for_superuser
 from mailings_message.models import Message
 
 
@@ -55,9 +55,9 @@ class MailingListView(LoginRequiredMixin, ListView):
     def get_queryset(self):
         user = self.request.user
         if user.is_superuser or user.has_perm("mailings.can_stoped"):
-            return Mailings.objects.all()
+            return get_mailings_from_cache_for_superuser()
         else:
-            return Mailings.objects.filter(owner=user)
+            return get_mailings_from_cache_for_user(user)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -145,9 +145,9 @@ class AttemptListView(LoginRequiredMixin, ListView):
     def get_queryset(self):
         user = self.request.user
         if user.is_superuser:
-            return AttemptSend.objects.all()
+            return get_attempt_from_cache_for_superuser()
         else:
-            return AttemptSend.objects.filter(mailing__owner=user)
+            return get_attempt_from_cache_for_user(user)
 
 
 class AttemptDetailView(LoginRequiredMixin, DetailView):
