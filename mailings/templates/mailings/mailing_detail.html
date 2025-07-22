@@ -1,0 +1,124 @@
+{% extends 'base.html' %}
+
+{% block title %}Детали рассылки #{{ object.id }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="card-title mb-0">
+                        Рассылка #{{ object.id }}: {{ object.message.subject }}
+                        <span class="badge bg-{% if object.status == 'completed' %}success{% elif object.status == 'started' %}warning{% else %}info{% endif %} float-end">
+                            {{ object.get_status_display }}
+                        </span>
+                    </h3>
+                </div>
+
+                <div class="card-body">
+                    <!-- Основная информация -->
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <h5>Основная информация</h5>
+                            <ul class="list-group">
+                                <li class="list-group-item">
+                                    <strong>Дата создания:</strong> {{ object.start_time|date:"d F Y H:i" }}
+                                </li>
+                                <li class="list-group-item">
+                                    <strong>Дата окончания:</strong>
+                                    {% if object.end_time %}
+                                    {{ object.end_time|date:"d F Y H:i" }}
+                                    {% else %}
+                                    <span class="text-muted">Не указана</span>
+                                    {% endif %}
+                                </li>
+                                <li class="list-group-item">
+                                    <strong>Статус:</strong> {{ object.get_status_display }}
+                                </li>
+                            </ul>
+                        </div>
+
+
+                    </div>
+
+                    <!-- Сообщение -->
+                    <div class="mb-4">
+                        <h5>Сообщение</h5>
+                        <div class="card">
+                            <div class="card-header">
+                                <strong>Тема:</strong> {{ object.message.subject }}
+                            </div>
+                            <div class="card-body">
+                                <pre>{{ object.message.body }}</pre>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Получатели -->
+                    <div class="mb-4">
+                        <h5>Получатели</h5>
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>ФИО</th>
+                                    <th>Email</th>
+                                    <th>Комментарий</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for client in object.clients.all %}
+                                <tr>
+                                    <td>{{ forloop.counter }}</td>
+                                    <td>{{ client.full_name }}</td>
+                                    <td>{{ client.email }}</td>
+                                    <td>{{ client.comment|truncatechars:50 }}</td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="4" class="text-center">Нет получателей</td>
+                                </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="card-footer d-flex justify-content-between">
+                    <a href="{% url 'mailings:mailings_list' %}" class="btn btn-secondary">
+                        <i class="bi bi-arrow-left"></i> Назад к списку
+                    </a>
+                    <div>
+
+                        {% if object.status != 'finished' and perms.mailings.can_stoped %}
+                        <a href="{% url 'mailings:mailing_stop' object.id %}" class="btn btn-danger">
+                            <i class="bi bi-sign-stop"></i> Остановить рассылку
+                        </a>
+                        {% endif %}
+
+                        {% if object.owner == request.user or request.user.is_superuser %}
+                        <a href="{% url 'mailings:mailing_update' object.id %}" class="btn btn-primary">
+                            <i class="bi bi-pencil"></i> Редактировать
+                        </a>
+                        <a href="{% url 'mailings:mailing_delete' object.id %}" class="btn btn-danger">
+                            <i class="bi bi-trash"></i> Удалить
+                        </a>
+                    </div>
+                    {% endif %}
+                    {% if object.status != 'finished' %}
+
+                    <a href="{% url 'mailings:start_mailing' object.pk %}"
+                       class="btn btn-success">
+                        <i class="bi bi-send"></i> Запустить рассылку сейчас
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

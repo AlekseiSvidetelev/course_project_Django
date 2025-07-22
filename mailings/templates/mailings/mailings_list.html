@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+{% block title %}Список рассылок{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="display-6 text-center">Список рассылок</h1>
+    <p class="lead text-center">Просмотрите список созданных рассылок.</p>
+
+    <div class="row justify-content-md-center mt-4">
+        <div class="col-md-12 col-sm-12">
+            <div class="card shadow">
+                <div class="card-header">
+                    Рассылки
+                    <a href="{% url 'mailings:mailing_create' %}" class="btn btn-success float-end">Создать рассылку</a>
+                </div>
+                <div class="card-body">
+                    {% if mailings %}
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th scope="col" style="width: 5%;">ID</th>
+                            <th scope="col" style="width: 45%;">Тема сообщения</th>
+                            <th scope="col" style="width: 15%;">Статус</th>
+                            <th scope="col" style="width: 10%;">Кол-во получателей</th>
+                            <th scope="col" style="width: 25%;">Действие</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for mailing in mailings %}
+                        <tr>
+                            <td>{{ mailing.id }}</td>
+                            <td>{{ mailing.message.subject }}</td>
+                            <td>
+                                {% if mailing.status == 'created' %}
+                                <span class="badge bg-warning text-dark">Создана</span>
+                                {% elif mailing.status == 'started' %}
+                                <span class="badge bg-primary">Запущена</span>
+                                {% elif mailing.status == 'finished' %}
+                                <span class="badge bg-success">Завершена</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ mailing.clients.count }}</td>
+                            <td>
+                                <a href="{% url 'mailings:mailing_detail' mailing.id %}" class="btn btn-primary btn-sm">
+                                    <i class="bi bi-info"></i>
+                                    Подробнее</a>
+
+
+                                {% if mailing.status != 'finished' and mailing.owner == request.user %}
+                                <a href="{% url 'mailings:start_mailing' mailing.id %}"
+                                   class="btn btn-success btn-sm"
+                                   onclick="return confirm('Запустить рассылку сейчас?')">
+                                    <i class="bi bi-send"></i> Запустить
+                                </a>
+                                {% endif %}
+
+                                {% if request.user.is_superuser or perms.mailings.can_stoped %}
+                                {% if mailing.status != 'finished' %}
+                                <a href="{% url 'mailings:mailing_stop' mailing.id %}" class="btn btn-danger btn-sm">
+                                    <i class="bi bi-sign-stop"></i> Остановить
+                                </a>
+                                {% endif %}
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                    {% else %}
+                    <p class="alert alert-info">Нет доступных рассылок.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

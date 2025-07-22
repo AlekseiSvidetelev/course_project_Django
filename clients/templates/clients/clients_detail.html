@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ object.full_name }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="display-4 text-center">Подробности клиента</h1>
+    <p class="lead text-center">Ознакомьтесь с информацией о клиенте.</p>
+
+    <div class="row justify-content-md-center mt-4">
+        <div class="col-md-12 col-sm-12">
+            <div class="card shadow">
+                <div class="card-header">
+                    Клиент: {{ object.full_name }}
+                </div>
+                <div class="card-body">
+                    <dl class="row">
+                        <dt class="col-sm-3">ФИО:</dt>
+                        <dd class="col-sm-9">{{ object.full_name }}</dd>
+
+                        <dt class="col-sm-3">E-mail:</dt>
+                        <dd class="col-sm-9">{{ object.email }}</dd>
+
+                        <dt class="col-sm-3">Комментарий:</dt>
+                        <dd class="col-sm-9">{{ object.comment|linebreaksbr }}</dd>
+                    </dl>
+
+                    <a href="{% url 'clients:clients_list' %}" class="btn btn-secondary">
+                        <i class="bi bi-arrow-left"></i>Назад к списку
+                        клиентов</a>
+                    {% if client.owner == request.user or request.user.is_superuser %}
+                    <a href="{% url 'clients:clients_update' object.id %}" class="btn btn-primary">
+                        <i class="bi bi-pencil"></i>Редактировать</a>
+                    <a href="{% url 'clients:clients_delete' object.id %}" class="btn btn-danger">
+                        <i class="bi bi-trash"></i>>Удалить</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

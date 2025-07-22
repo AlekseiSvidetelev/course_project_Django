@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block title %}Список попыток отправки{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="display-6 text-center">Список попыток отправки</h1>
+    <p class="lead text-center">Просмотрите статистику попыток отправки сообщений.</p>
+
+    <div class="row justify-content-md-center mt-4">
+        <div class="col-md-12 col-sm-12">
+            <div class="card shadow">
+                <div class="card-body">
+                    {% if attempts %}
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">Тема рассылки</th>
+                            <th scope="col">Email клиента</th>
+                            <th scope="col">Дата отправки</th>
+                            <th scope="col">Статус</th>
+                            <th scope="col">Детали</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for attempt in attempts %}
+                        <tr>
+                            <td>{{ attempt.id }}</td>
+                            <td>{{ attempt.mailing.message.subject }}</td>
+                            <td>{{ attempt.email.email }}</td>
+                            <td>{{ attempt.attempt_time }}</td>
+                            <td>
+                                {% if attempt.status %}
+                                <span class="badge bg-success">Отправлено</span>
+                                {% else %}
+                                <span class="badge bg-danger">Ошибка</span>
+                                {% endif %}
+                            </td>
+                            <td><a href="{% url 'mailings:attempt_detail' attempt.id %}" class="btn btn-primary btn-sm">
+                                <i class="bi bi-info"></i>Подробнее</a></td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                    {% else %}
+                    <p class="alert alert-info">Нет попыток отправки.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

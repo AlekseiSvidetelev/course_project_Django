@@ -1,0 +1,198 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container py-5 bg-light">
+    <div class="row justify-content-center py-3 py-md-5">
+        <div class="col-12 col-lg-10 text-center">
+            {% if user.is_authenticated %}
+            <h1 class="display-4 fw-bold text-primary mb-3 mb-md-4 animate__animated animate__fadeInDown">
+                Панель мониторинга рассылок
+            </h1>
+            <p class="lead text-muted fs-4 animate__animated animate__fadeIn animate__delay-1s">
+                Добро пожаловать, {{ user.first_name|default:user.email }}!
+            </p>
+            <div class="mt-3 mt-md-4 animate__animated animate__fadeIn animate__delay-2s">
+                <span class="badge bg-primary me-2 mb-2 mb-md-0">Всего: {{ total_mailings }}</span>
+                <span class="badge bg-success me-2 mb-2 mb-md-0">Активных: {{ active_mailings }}</span>
+                <span class="badge bg-info mb-2 mb-md-0">Получателей: {{ unique_clients }}</span>
+            </div>
+            {% else %}
+            <h1 class="display-4 fw-bold text-primary mb-3 mb-md-4 animate__animated animate__fadeInDown">
+                Система управления рассылками
+            </h1>
+            <p class="lead text-muted fs-4 animate__animated animate__fadeIn animate__delay-1s">
+                Автоматизируйте ваши email-рассылки и отслеживайте их эффективность
+            </p>
+            <div class="mt-4 mt-md-5 animate__animated animate__fadeIn animate__delay-2s">
+                <h3 class="mb-4">Начните работу прямо сейчас!</h3>
+                <div class="d-flex flex-column flex-sm-row justify-content-center gap-3">
+                    <a href="{% url 'users:login' %}" class="btn btn-primary btn-lg px-4 py-3">
+                        <i class="bi bi-box-arrow-in-right me-2"></i>Войти в систему
+                    </a>
+                    <a href="{% url 'users:register' %}" class="btn btn-outline-primary btn-lg px-4 py-3">
+                        <i class="bi bi-person-plus me-2"></i>Создать аккаунт
+                    </a>
+                </div>
+                <p class="mt-4 text-muted fs-5">
+                    Уже отправляете рассылки? <a href="{% url 'users:login' %}" class="fw-bold">Войдите в систему</a>
+                </p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    {% if user.is_authenticated %}
+    <!-- Первый ряд: Основная статистика -->
+    <div class="row row-cols-1 row-cols-md-3 g-4 mb-4 mb-md-5 mx-0 mx-md-3">
+        <div class="col animate__animated animate__fadeInLeft">
+            <div class="card h-100 border-0 shadow-lg rounded-4 overflow-hidden">
+                <div class="card-header bg-primary bg-gradient text-white py-3">
+                    <h5 class="card-title mb-0 text-center"><i class="bi bi-envelope me-2"></i>Всего рассылок</h5>
+                </div>
+                <div class="card-body text-center py-4">
+                    <p class="display-4 display-md-3 fw-bold text-primary mb-0">{{ total_mailings }}</p>
+                </div>
+                <div class="card-footer bg-transparent border-top-0">
+                    <small class="text-muted">За все время работы</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col animate__animated animate__fadeInUp">
+            <div class="card h-100 border-0 shadow-lg rounded-4 overflow-hidden">
+                <div class="card-header bg-success bg-gradient text-white py-3">
+                    <h5 class="card-title mb-0 text-center"><i class="bi bi-send-check me-2"></i>Активных рассылок</h5>
+                </div>
+                <div class="card-body text-center py-4">
+                    <p class="display-4 display-md-3 fw-bold text-success mb-0">{{ active_mailings }}</p>
+                </div>
+                <div class="card-footer bg-transparent border-top-0">
+                    <small class="text-muted">Текущие кампании</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col animate__animated animate__fadeInRight">
+            <div class="card h-100 border-0 shadow-lg rounded-4 overflow-hidden">
+                <div class="card-header bg-info bg-gradient text-white py-3">
+                    <h5 class="card-title mb-0 text-center"><i class="bi bi-people me-2"></i>Уникальных получателей</h5>
+                </div>
+                <div class="card-body text-center py-4">
+                    <p class="display-4 display-md-3 fw-bold text-info mb-0">{{ unique_clients }}</p>
+                </div>
+                <div class="card-footer bg-transparent border-top-0">
+                    <small class="text-muted">В базе данных</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Второй ряд: Статистика попыток -->
+    <div class="row row-cols-1 row-cols-md-3 g-4 mb-4 mb-md-5 mx-0 mx-md-3">
+        <div class="col animate__animated animate__fadeInLeft">
+            <div class="card h-100 border-0 shadow-lg rounded-4 overflow-hidden">
+                <div class="card-header bg-success bg-gradient text-white py-3">
+                    <h5 class="card-title mb-0 text-center"><i class="bi bi-check-circle me-2"></i>Успешные попытки</h5>
+                </div>
+                <div class="card-body text-center py-4">
+                    <p class="display-4 display-md-3 fw-bold text-success mb-0">{{ successful_attempts }}</p>
+                </div>
+                <div class="card-footer bg-transparent border-top-0">
+                    <small class="text-muted">Успешно доставлено</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col animate__animated animate__fadeInUp">
+            <div class="card h-100 border-0 shadow-lg rounded-4 overflow-hidden">
+                <div class="card-header bg-danger bg-gradient text-white py-3">
+                    <h5 class="card-title mb-0 text-center"><i class="bi bi-x-circle me-2"></i>Неудачные попытки</h5>
+                </div>
+                <div class="card-body text-center py-4">
+                    <p class="display-4 display-md-3 fw-bold text-danger mb-0">{{ failed_attempts }}</p>
+                </div>
+                <div class="card-footer bg-transparent border-top-0">
+                    <small class="text-muted">Не доставлено</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col animate__animated animate__fadeInRight">
+            <div class="card h-100 border-0 shadow-lg rounded-4 overflow-hidden">
+                <div class="card-header bg-warning bg-gradient text-white py-3">
+                    <h5 class="card-title mb-0 text-center"><i class="bi bi-envelope-paper me-2"></i>Всего попыток</h5>
+                </div>
+                <div class="card-body text-center py-4">
+                    <p class="display-4 display-md-3 fw-bold text-warning mb-0">{{ total_attempts }}</p>
+                </div>
+                <div class="card-footer bg-transparent border-top-0">
+                    <small class="text-muted">Всего отправлено</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Кнопки действий -->
+    <div class="row justify-content-center mt-4 animate__animated animate__fadeIn animate__delay-1s mx-0 mx-md-3">
+        <div class="col-12 col-md-10 col-lg-11 text-center">
+            <div class="d-grid gap-2 gap-sm-3 d-sm-flex justify-content-sm-center">
+                <a href="{% url 'mailings_message:create_message' %}" class="btn btn-primary btn-lg px-3 px-sm-4">
+                    <i class="bi bi-plus-circle me-1 me-sm-2"></i>Создать сообщение
+                </a>
+                <a href="{% url 'clients:clients_create' %}" class="btn btn-primary btn-lg px-3 px-sm-4">
+                    <i class="bi bi-plus-circle me-1 me-sm-2"></i>Добавить получателей
+                </a>
+                <a href="{% url 'mailings:mailing_create' %}" class="btn btn-primary btn-lg px-3 px-sm-4">
+                    <i class="bi bi-plus-circle me-1 me-sm-2"></i>Создать рассылку
+                </a>
+                <a href="{% url 'mailings:attempt_list' %}"
+                   class="btn btn-outline-secondary btn-lg px-3 px-sm-4 mt-2 mt-sm-0">
+                    <i class="bi bi-list-check me-1 me-sm-2"></i>История отправок
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<style>
+    .card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        max-width: 100%;
+    }
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+    }
+    .rounded-4 {
+        border-radius: 1rem !important;
+    }
+    .bg-gradient {
+        background: linear-gradient(135deg, #0d6efd 0%, #0b5ed7 100%);
+    }
+    .bg-success.bg-gradient {
+        background: linear-gradient(135deg, #198754 0%, #157347 100%);
+    }
+    .bg-info.bg-gradient {
+        background: linear-gradient(135deg, #0dcaf0 0%, #0aa2c0 100%);
+    }
+    .bg-danger.bg-gradient {
+        background: linear-gradient(135deg, #dc3545 0%, #bd2130 100%);
+    }
+    .bg-warning.bg-gradient {
+        background: linear-gradient(135deg, #ffc107 0%, #e0a800 100%);
+    }
+    @media (max-width: 768px) {
+        .display-4 {
+            font-size: 2.5rem;
+        }
+        .card-header h5 {
+            font-size: 1rem;
+        }
+        .btn-lg {
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+        }
+    }
+</style>
+{% endblock %}

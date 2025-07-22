@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block title %}Список сообщений{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="display-6 text-center">Список сообщений</h1>
+    <p class="lead text-center">Просмотрите список созданных сообщений.</p>
+
+    <div class="row justify-content-md-center mt-4">
+        <div class="col-md-12 col-sm-12">
+            <div class="card shadow">
+                <div class="card-header">
+                    Сообщения
+                    <a href="{% url 'mailings_message:create_message' %}" class="btn btn-success float-end">Создать
+                        сообщение</a>
+                </div>
+                <div class="card-body">
+                    {% if messages %}
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th scope="col" style="width: 5%;">№</th>
+                            <th scope="col" style="width: 30%;">Тема</th>
+                            <th scope="col" style="width: 50%;">Краткое содержание</th>
+                            <th scope="col" style="width: 15%;">Действие</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for message in messages %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ message.subject|truncatechars:30 }}</td>
+                            <td>{{ message.body|truncatechars:100 }}</td>
+                            <td>
+                                <a href="{% url 'mailings_message:detail_message' message.id %}"
+                                   class="btn btn-primary btn-sm">
+                                    <i class="bi bi-info"></i>
+                                    Подробнее</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                    {% else %}
+                    <p class="alert alert-info">Нет доступных сообщений.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
